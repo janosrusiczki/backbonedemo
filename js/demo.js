@@ -9,9 +9,6 @@ var Movie = Backbone.Model.extend({
 var Movies = Backbone.Collection.extend({
 	model: Movie,
 	url: 'api/movies',
-	display: function() {
-		this.forEach(function(el) { console.log( el.get('title') ) });
-	},
 });
 
 var movie = new Movie();
@@ -21,12 +18,6 @@ movie.on("error", function(model, error) {
 });
 
 var movies = new Movies();
-// movies.fetch();
-
-movie.set({ title: "Snatch!" });
-movies.create({ title: "a" });
-
-// movies.display();
 
 var MovieView = Backbone.View.extend({
 		tagName: "li",
@@ -39,18 +30,16 @@ var MovieView = Backbone.View.extend({
 		},
 		render: function() {
 			$(this.el).html(this.template(this.model.toJSON()));
-      // (this.model.get('title'));
       return this;
 		}
 });
 
 var AppView = Backbone.View.extend({
-		el: $('#app'),
+		el: $('#app'), // not really neccessary
 		initialize: function() {
 			movies.bind('add', this.addOne, this);		
 			movies.bind('reset', this.addAll, this);
 			movies.bind('all', this.render, this);
-			
 			movies.fetch();
 		},
 		addOne: function(movie) {
