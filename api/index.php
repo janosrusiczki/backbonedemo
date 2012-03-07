@@ -13,13 +13,16 @@ $app->get('/movies', function () {
 		$movies = array(
 			array(
 				'title' => 'The Big Lebowski',
+				'year' => '1998',
 			),
 			array(
 				'title' => 'Pulp Fiction',
+				'year' => '1994',
 			),
 			array(
 				'title' => 'Trainspotting',
-			)
+				'year' => '1996',
+			),
 		);
 		header("Content-Type: application/json");
     echo(json_encode($movies));
