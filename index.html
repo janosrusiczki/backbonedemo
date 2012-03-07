@@ -9,22 +9,16 @@
   <meta charset="utf-8">
   <title>My awesome Backbone.js demo</title>
   <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <header>
-
-  </header>
-  <div role="main">
-
-  </div>
-  <footer>
-
-  </footer>
-
+  
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.1/underscore-min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.1/backbone-min.js"></script>
-
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.1/backbone-min.js"></script>  
+</head>
+<body>
+  <div id="app">
+  	<ul id="movie-list"></ul>
+  </div>
+	<script type="text/template" id="item-template"><%= title %></script>  
 	<script src="js/demo.js"></script>
 </body>
 </html>
