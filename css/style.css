@@ -293,19 +293,53 @@ td { vertical-align: top; }
 }
 
 #app {
-	margin: 10px;
-	width: 300px;	
+	margin: 10px auto;
+	width: 300px;
+	border: 1px solid #aaa;
+	border-radius: 3px;
+	padding: 5px;	
 }
 
 #app ul {
 	list-style-type: none;
 	padding: 0;
-	margin: 0;
+	margin: 0;	
+	height: 250px;
+	overflow: auto;
+	margin-bottom: 5px;
 }
 
 #app ul li {
 	margin-top: 3px;
 	padding: 3px 6px;
-	border: 1px solid #ddd;
+	border: 1px solid #aaa;
 	border-radius: 3px;
+}
+
+#app ul li:hover {
+	background: #ddd;
+}
+
+#movie-title, #movie-year, #add-movie {
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	margin-right: 5px;
+	padding: 3px;
+}
+
+#movie-title {
+	width: 163px;
+}
+
+#movie-year {
+	width: 50px;
+}
+
+#add-movie {
+	width: 60px;
+	margin-right: 0;
+}
+
+#add-movie:hover {
+	background: #ddd;
 }
