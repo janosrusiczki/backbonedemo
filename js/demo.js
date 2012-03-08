@@ -29,6 +29,7 @@ var MovieView = Backbone.View.extend({
 			*/
 		},
 		render: function() {
+			console.log('Rendering MovieView.');
 			$(this.el).html(this.template(this.model.toJSON()));
       return this;
 		}
@@ -37,12 +38,14 @@ var MovieView = Backbone.View.extend({
 var AppView = Backbone.View.extend({
 		el: $('#app'), // not really neccessary
 		initialize: function() {
+			console.log('Initializing AppView.');
 			movies.bind('add', this.addOne, this);		
 			movies.bind('reset', this.addAll, this);
 			movies.bind('all', this.render, this);
 			movies.fetch();
 		},
 		addOne: function(movie) {
+			console.log('Adding a MovieView.');
 			var movieView = new MovieView({model: movie});
 			$("#movie-list").append(movieView.render().el);
 		},
