@@ -20,7 +20,7 @@ var MovieView = Backbone.View.extend({
 	template: _.template($('#item-template').html()),
 	
 	initialize: function() {		
-		this.model.bind('destroy', this.remove, this);
+		this.model.bind('destroy', this.remove, this); // [1] I'm talking about this bind
 	},
 	
 	render: function() {
@@ -36,7 +36,7 @@ var MovieView = Backbone.View.extend({
 	deleteMovie: function() {
 		if(confirm('Are you sure that you want to delete ' + this.model.get('title') + '?')) {
 			console.log('Destroying Movie: id = ' + this.model.id);
-			this.model.destroy();
+			this.model.destroy(); // will also trigger remove via the bind above [1]
 		}
 	},
 	
@@ -51,10 +51,10 @@ var AppView = Backbone.View.extend({
 	initialize: function() {
 		console.log('Initializing AppView.');
 	
-		movies.bind('add', this.addOne, this); // I mean this binding	
+		movies.bind('add', this.addOne, this); // [2] I mean this binding	
 		movies.bind('reset', this.addAll, this);
 
-		movies.fetch(); // Will call Movies.fetch() -> Movies.reset() -> (via binding above) -> AppView.addAll()
+		movies.fetch(); // Will call Movies.fetch() -> Movies.reset() -> (via binding above [2]) -> AppView.addAll()
 	},
 
 	addAll: function() {
