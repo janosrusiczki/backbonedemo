@@ -1,23 +1,16 @@
 <?php
 
-try 
-{
-  $database = sqlite_open('../db/backbonedemo.sqlite');
-}
-catch(Exception $e) 
-{
-  die($error);
-}
-
-/*
-$query = 'DROP TABLE movies';
-if(!$database->queryExec($query, $error)) die($error);
-$query = 'CREATE TABLE movies (id INTEGER PRIMARY KEY, title TEXT, year INTEGER)';
-if(!$database->queryExec($query, $error)) die($error);
-*/
-
 require 'Slim/Slim.php';
 $app = new Slim();
+
+$db = new SQLiteDatabase('../db/backbonedemo.sqlite');
+
+/* // database initialization
+$query = 'DROP TABLE movies';
+sqlite_query($database, $query);
+$query = 'CREATE TABLE movies (id INTEGER PRIMARY KEY, title TEXT, year INTEGER)';
+sqlite_query($database, $query);
+*/
 
 $app->get('/', function () {
     echo 'Welcome to your awesome API!';
@@ -25,43 +18,46 @@ $app->get('/', function () {
 
 // get to the zeama!
 
-$app->get('/movies', function () use($database) {
-		$movies = array();
-	
-		$query = "SELECT * FROM movies";
-		if($result = sqlite_query($database, $query)) while($row = sqlite_fetch_array($result)) $movies[] = array('id' => $row['id'], 'title' => $row['title'], 'year' => $row['year']);
-		else die($error);
-		
-		header("Content-Type: application/json");
+$app->get('/movies', function () use($db) {
+	$movies = array();
+
+	$query = "SELECT * FROM movies";
+	$result = $db->query($query);
+	while($row = $result->fetch())
+		$movies[] = array('id' => $row['id'], 'title' => $row['title'], 'year' => $row['year']);
+
+	header("Content-Type: application/json");
     echo(json_encode($movies));
 
     exit();
 });
 
-$app->post('/movies', function () use ($app, $database) {
-		$request = json_decode($app->request()->getBody());
+$app->post('/movies', function () use ($app, $db) {
+	$request = json_decode($app->request()->getBody());
 
-		$title = $request->title;
-		$year = $request->year;
-		
-    $query = "INSERT INTO movies VALUES(null, '{$title}', {$year})";
-		sqlite_query($database, $query);
-		
-		$record = array('id' => sqlite_last_insert_rowid($database), 'title' => $title, 'year' => $year);
-		
-		header("Content-Type: application/json");
-		echo(json_encode($record)); // very important, otherwise id is not assigned to the model
+	$title = $request->title;
+	$year = $request->year;
+	
+	$query = "INSERT INTO movies VALUES(null, '{$title}', {$year})";
+	$db->query($query);
+
+	// very important, otherwise id is not assigned to the model
+	header("Content-Type: application/json");	
+	$record = array('id' => $db->lastInsertRowid());
+	echo(json_encode($record));
 		
     exit();
 });
 
+/*
 $app->put('/movies', function () {
     echo 'This is a PUT route';
 });
+*/
 
-$app->delete('/movies/:id', function ($id) use ($database) {
-		$query = "DELETE FROM movies WHERE id = $id";
-		sqlite_query($database, $query);
+$app->delete('/movies/:id', function ($id) use ($db) {
+	$query = "DELETE FROM movies WHERE id = $id";
+	$db->query($query);
 });
 
 $app->run();
