@@ -64,7 +64,7 @@ var AppView = Backbone.View.extend({
 
 	addOne: function(movie) {
 		console.log('Adding a MovieView.');
-		var movieView = new MovieView({model: movie}); // Will create a MovieView
+		var movieView = new MovieView({ model: movie }); // Will create a MovieView
 		$("#movie-list").append(movieView.render().el); // Will render and add the movieView
 	},
 
