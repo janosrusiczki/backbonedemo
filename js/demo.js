@@ -1,10 +1,10 @@
 var Movie = Backbone.Model.extend({
 	validate: function(attributes) {
-		if(attributes.title == "" || attributes.year == "") {
-			return "Please enter the movie's title and year.";
+		if(attributes.title == "") {
+			return "No title!?";
 		}
 	},
-})
+});
 
 // Define our collection
 var Movies = Backbone.Collection.extend({
@@ -19,7 +19,8 @@ var MovieView = Backbone.View.extend({
 	tagName: "li",
 	template: _.template($('#item-template').html()),
 	
-	initialize: function() {		
+	initialize: function() {
+		this.model.bind('change', this.render, this); // When changing the associated model the view is re-rendered
 		this.model.bind('destroy', this.remove, this); // [1] I'm talking about this bind
 	},
 	
@@ -51,21 +52,21 @@ var AppView = Backbone.View.extend({
 	initialize: function() {
 		console.log('Initializing AppView.');
 	
-		movies.bind('add', this.addOne, this); // [2] I mean this binding	
-		movies.bind('reset', this.addAll, this);
-
+		movies.bind('add', this.addOne, this);
+		movies.bind('reset', this.addAll, this); // [2] I mean this binding
+		
 		movies.fetch(); // Will call Movies.fetch() -> Movies.reset() -> (via binding above [2]) -> AppView.addAll()
-	},
-
-	addAll: function() {
-		console.log('Adding all MovieViews.');
-		movies.each(this.addOne);
 	},
 
 	addOne: function(movie) {
 		console.log('Adding a MovieView.');
 		var movieView = new MovieView({ model: movie }); // Will create a MovieView
 		$("#movie-list").append(movieView.render().el); // Will render and add the movieView
+	},
+	
+	addAll: function() {
+		console.log('Adding all MovieViews.');
+		movies.each(this.addOne);
 	},
 
 	render: function() {
@@ -77,9 +78,12 @@ var AppView = Backbone.View.extend({
 	},
 
 	addMovie: function() {
-		movies.create({"title": $('#movie-title').val(), "year": $('#movie-year').val()});
-		$('#movie-title').val('');
-		$('#movie-year').val('');
+		var movie = new Movie({"title": $('#movie-title').val(), "year": $('#movie-year').val()});
+		if(movie.isValid()) {
+			movies.create(movie);
+			$('#movie-title').val('');
+			$('#movie-year').val('');
+		};
 	},
 });
 

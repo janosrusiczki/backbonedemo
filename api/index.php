@@ -5,18 +5,17 @@ $app = new Slim();
 
 $db = new SQLiteDatabase('../db/backbonedemo.sqlite');
 
-/* // database initialization
-$query = 'DROP TABLE movies';
-sqlite_query($database, $query);
+/*
+// create the movies table in case it's needed
 $query = 'CREATE TABLE movies (id INTEGER PRIMARY KEY, title TEXT, year INTEGER)';
-sqlite_query($database, $query);
+$db->query($query);
 */
 
 $app->get('/', function () {
     echo 'Welcome to your awesome API!';
 });
 
-// get to the zeama!
+// get to the zeama! :)
 
 $app->get('/movies', function () use($db) {
 	$movies = array();
@@ -33,6 +32,7 @@ $app->get('/movies', function () use($db) {
 });
 
 $app->post('/movies', function () use ($app, $db) {
+	// the JSON data is pulled right from the request body
 	$request = json_decode($app->request()->getBody());
 
 	$title = $request->title;
@@ -41,7 +41,9 @@ $app->post('/movies', function () use ($app, $db) {
 	$query = "INSERT INTO movies VALUES(null, '{$title}', {$year})";
 	$db->query($query);
 
-	// very important, otherwise id is not assigned to the model
+	// the next few lines are very important
+	// otherwise id is not assigned to the model after a successful POST
+	// and deletes and edits won't work without refetching everything
 	header("Content-Type: application/json");	
 	$record = array('id' => $db->lastInsertRowid());
 	echo(json_encode($record));
@@ -50,6 +52,7 @@ $app->post('/movies', function () use ($app, $db) {
 });
 
 /*
+// we don't need this for now
 $app->put('/movies', function () {
     echo 'This is a PUT route';
 });
