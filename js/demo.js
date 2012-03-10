@@ -1,5 +1,14 @@
+var Movie = Backbone.Model.extend({
+	validate: function(attributes) {
+		if(attributes.title == "" || attributes.year == "") {
+			return "Please enter the movie's title and year.";
+		}
+	},
+})
+
 // Define our collection
 var Movies = Backbone.Collection.extend({
+	model: Movie,
 	url: 'api/movies',
 });
 
