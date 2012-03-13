@@ -12,7 +12,7 @@ $db->query($query);
 */
 
 $app->get('/', function () {
-    echo 'Welcome to your awesome API!';
+	echo 'Welcome to your awesome API!';
 });
 
 // get to the zeama! :)
@@ -26,9 +26,9 @@ $app->get('/movies', function () use($db) {
 		$movies[] = array('id' => $row['id'], 'title' => $row['title'], 'year' => $row['year']);
 
 	header("Content-Type: application/json");
-    echo(json_encode($movies));
-
-    exit();
+	echo(json_encode($movies));
+	
+	exit();
 });
 
 $app->post('/movies', function () use ($app, $db) {
@@ -48,7 +48,7 @@ $app->post('/movies', function () use ($app, $db) {
 	$record = array('id' => $db->lastInsertRowid());
 	echo(json_encode($record));
 		
-    exit();
+	exit();
 });
 
 /*
